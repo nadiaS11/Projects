@@ -19,10 +19,11 @@ SELECT distinct product_code FROM transactions where market_code='Mark006';
 SELECT distinct currency from transactions 
 
 -- Determining the number of records in each currency --
-SELECT  COUNT(*) currency from transactions  where currency="INR" ;
-SELECT COUNT(*) currency from transactions  where currency="INR\r" ;
- SELECT COUNT(*) currency from transactions  where currency="USD" ;
- SELECT COUNT(*) currency from transactions  where currency="USD\r";
+
+SELECT  COUNT(*) currency from transactions  where currency='INR'; --  the answer is 279 --
+SELECT COUNT(*) currency from transactions  where currency='INR\r' ;--  the answer is150000 --
+SELECT COUNT(*) currency from transactions  where currency='USD'; --  the answer is 2 --
+SELECT COUNT(*) currency from transactions  where currency='USD\r'; --  the answer is 2 --
 
 -- transactions where currency in USD --
 
@@ -38,23 +39,23 @@ SELECT SUM(transactions.sales_amount)  as revenue
 FROM transactions 
 INNER JOIN date  as d
 ON transactions.order_date = d.date 
-where d.year=2019 and transactions.currency="INR\r" or transactions.currency="USD\r"  ;
+where d.year=2019 and transactions.currency='INR\r' or transactions.currency='USD\r'  ; --  the answer is 33601952 --
 
  
 --  total revenue in year 201, January Month --
 
-SELECT SUM(transactions.sales_amount) 
-FROM transactions INNER JOIN date 
-ON transactions.order_date=date.date 
-where date.year= 2019 and and date.month_name= 'January' and (transactions.currency= 'INR\r' or transactions.currency= 'USD\r');
+SELECT SUM(t.sales_amount) as revenue
+FROM transactions as t
+INNER JOIN date as d
+ON t.order_date=d.date 
+where (t.currency= 'INR\r' or t.currency= 'USD\r') and d.year= 2019 and d.month_name= 'January'; -- the answer is 31530566 --
 
 -- Show total revenue in year 2020 in Chennai --
-
--SELECT SUM(transactions.sales_amount) 
-FROM transactions 
-INNER JOIN date 
-ON transactions.order_date=date.date 
-where date.year=2020 and transactions.market_code="Mark001";
+SELECT SUM(t.sales_amount) as revenue
+FROM transactions as t
+INNER JOIN date as d
+ON t.order_date=d.date 
+where t.market_code='Mark001' and  d.year=2020; -- the answer is 2463024 --
 
 -- Top 5 customer-
 
@@ -62,11 +63,13 @@ SELECT c.custmer_name, sum(t.sales_amount) as revenue
  FROM customers as c
  Inner join transactions as t
  on c.customer_code=t.customer_code
- where transactions.currency="INR\r" or transactions.currency="USD\r"
+ where t.currency="INR\r" or t.currency='USD\r'
  group by custmer_name
  order  by revenue desc  
- Limit 5;
+ Limit 5; 
  
+
+
 
  /* 
  ----- Data Analysis Using Power BI to create a column to convrt the currency from USD to INR -----
