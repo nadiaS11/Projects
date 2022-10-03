@@ -1,0 +1,35 @@
+-- to find the murder in SQL City --
+SELECT * FROM crime_scene_report
+where type = 'murder' and city = 'SQL City'
+              
+-- to find the one who lives in last house of Northwestern Dr --
+ SELECT *, MAX()FROM person
+ SELECT *, max(address_number) FROM person
+ 
+
+-- to find the both witnesses now that i have name and address available --
+ SELECT *FROM person
+  where(name= 'Morty Schapiro' AND address_street_name ='Northwestern Dr') or 
+  ( name like 'Annabel%' AND address_street_name ='Franklin Ave')             
+
+
+-- to inspect their interview as i have found their id that matche with person id in interview table --
+SELECT * FROM interview
+  where person_id = 14887 or person_id=16371
+  
+  
+  -- Here my mind exploded as their interview gives every information i need--
+  -- to find the person that matches person id on id of person table then further join to match license id of person on id of driveres_license table --
+  
+  select *
+  from get_fit_now_member as g
+  Join person as p on g.person_id=p.id
+  join drivers_license as d on p.license_id=d.id
+  where membership_status='gold' and g.id like '48Z%'
+  
+  -- to check the solution --
+  INSERT INTO solution VALUES (1, 'Jeremy Bowers');
+        
+        SELECT value FROM solution;
+  
+ -- the murder is 'Jeremy Bowers' --
