@@ -1,4 +1,4 @@
--- Create a SQL statement to display columns Id, Name, Population from the city table and limit results to first 10 rows only. 
+-- Create a SQL statement to display columns Id, Name, Population from the city table and limit results to first 10 rows only
 select id, name, info as population from world_x.city
 limit 10;
 
@@ -74,7 +74,7 @@ left join world_x.city as city
 on lf.code=city.CountryCode
 where lf.continent="Europe";
 
--- Create a SQL statement to update president of United States after election in 2015.
+
 
 -- Create a SQL statement to find the most populated city in the city table.
 SELECT Name, CountryCode, District, json_extract(info, '$.Population') as Most_populated
