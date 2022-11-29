@@ -1,0 +1,96 @@
+-- Create a SQL statement to display columns Id, Name, Population from the city table and limit results to first 10 rows only. 
+select id, name, info as population from world_x.city
+limit 10;
+
+-- Create a SQL statement to display columns Id, Name, Population from the city table and limit results to rows 31-40.
+SELECT id, Name, json_extract(info, '$.Population') as population
+FROM world_x.city
+limit 30,10;
+
+-- Create a SQL statement to find only those cities from city table whose population is larger than 2000000.
+SELECT id, Name, json_extract(info, '$.Population') as population
+FROM world_x.city
+where json_extract(info, '$.Population') >2000000;
+
+-- Create a SQL statement to find all city names from city table whose name begins with Be prefix.
+select name from  world_x.city
+where name like 'Be%';
+
+-- Create a SQL statement to find only those cities from city table whose population is between 500000-1000000.
+SELECT id, Name, json_extract(info, '$.Population') as population
+FROM world_x.city
+where json_extract(info, '$.Population') between 500000 and 1000000 ;
+
+-- Create a SQL statement to display all cities from the city table sorted by Name in ascending order.
+select name 
+from world_x.city 
+order by name asc;
+
+-- Create a SQL statement to find a city with the lowest population in the city table.
+select id, name, Min(population)
+from (
+		SELECT *, json_extract(info, '$.Population') as population
+		FROM world_x.city) as pop;
+        
+-- Create a SQL statement to find a country with the largest population in the country table.
+select id, name, max(population)
+from (
+		SELECT *, json_extract(info, '$.Population') as population
+		FROM world_x.city) as pop;
+        
+-- Create a SQL statement to list all the languages spoken in the Caribbean region.
+select  cl.language, lf.region
+from(
+	SELECT  trim(BOTH '"' FROM json_extract(doc, '$.Code')) as code, 
+    trim(BOTH '"' FROM json_extract(doc, '$.Name')) as country,   
+    trim(BOTH '"' FROM json_extract(json_extract(doc, '$.geography'), '$.Region')) as region
+	FROM world_x.countryinfo
+    ) as lf
+left join  world_x.countrylanguage as cl
+on lf.code=cl.CountryCode
+where lf.region='Caribbean';
+
+-- Create a SQL statement to find the capital of Spain (ESP).
+SELECT co.name as country, ci.name as capital
+FROM world_x.city as ci
+inner join  world_x.country as co
+on ci.id=co.capital
+where co.capital=653;
+
+-- Create a SQL statement to find the country with the highest life expectancy.
+select lf.country, Max(lf.life_expectency)as Highest_life_expectency
+from(
+	SELECT  json_extract(doc, '$.Name') as country, json_extract(json_extract(doc, '$.demographics'), '$.LifeExpectancy') as life_expectency
+	FROM world_x.countryinfo
+    ) as lf
+;
+
+-- Create a SQL statement to find all cities from the Europe continent.
+select city.name as cities
+from (
+	SELECT  trim(BOTH '"' FROM json_extract(doc, '$.Code')) as code,  trim(BOTH '"' FROM json_extract(doc, '$.Name')) as country,    trim(BOTH '"' FROM json_extract(json_extract(doc, '$.geography'), '$.Continent')) as Continent
+	FROM world_x.countryinfo) as lf
+left join world_x.city as city
+on lf.code=city.CountryCode
+where lf.continent="Europe";
+
+-- Create a SQL statement to update president of United States after election in 2015.
+
+-- Create a SQL statement to find the most populated city in the city table.
+SELECT Name, CountryCode, District, json_extract(info, '$.Population') as Most_populated
+FROM world_x.city
+order by json_extract(info, '$.Population') desc
+limit 1;
+        
+-- Create a SQL statement to find the least populated city in the city table.
+SELECT Name, CountryCode, District, json_extract(info, '$.Population') as least_populated
+FROM world_x.city
+order by json_extract(info, '$.Population') asc
+limit 1;
+
+-- Create a SQL statement to calculate number of records of the city table.
+select count(*) from world_x.city;
+
+-- Create a SQL statement to get number of cities in China from the city table.
+SELECT count(Name) FROM world_x.city
+where CountryCode="CHN";
